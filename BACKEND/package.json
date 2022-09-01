@@ -1,0 +1,14 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "backend apis and server code for BMB",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jagpat Singh",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.1"
+  }
+}
