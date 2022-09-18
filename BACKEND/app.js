@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const app = express();
+const userRoute = require('./node-apis/users/routes/users');
 
 // use morgan to log incoming requests
 app.use(morgan('dev'));
@@ -20,7 +21,7 @@ app.use((req, res, next) => {
 });
 
 //handling incoming requests(routes)
-
+app.use('/users', userRoute);
 
 // Handling errors
 app.use((req, res, next) => {
@@ -38,6 +39,8 @@ app.use((error, req, res, next) => {
     });
 });
 
+// Handling incoming requests
+app.use('/books', bookRouter);
 
 app.get('/', (req, res, next) => {
     res.send('<h1>Book My Book Home Page</h1>')
