@@ -8,6 +8,7 @@ router.get('/', (req, res, next) => {
     User.find()
         .exec()
         .then((users) => {
+            connsole.log("getting all users");
             console.log(users);
             return res.status(200).json({
                 count: users.length,
@@ -69,3 +70,5 @@ router.post('/login', (req, res, next) => {
         });
     }
 });
+
+module.exports = router;
