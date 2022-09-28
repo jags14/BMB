@@ -16,12 +16,9 @@ const bookSchema = mongoose.Schema({
     },
     price: {type: Number, required: true},
     genre: String,
-    published: {
-        type: Date,
-        default: Date.now
-    },
     edition: Number,
-    rating: Number
+    rating: Number,
+    isbn: String
 });
 
 module.exports = mongoose.model('Book', bookSchema);

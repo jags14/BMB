@@ -4,13 +4,14 @@ const morgan = require('morgan');
 const app = express();
 const userRouter = require('./node-apis/users/routes/users');
 const bookRouter = require('./node-apis/books/routes/books');
+// const authRouter = require('');
 const { default: mongoose } = require('mongoose');
 
 // connecting to mongodb database
 mongoose.connect('mongodb+srv://jags:' + process.env.MONGO_ATLAS_PW + '@cluster0.07d8ppo.mongodb.net/?retryWrites=true&w=majority', {
     useNewUrlParser: true,
     useUnifiedTopology: true
-})
+});
 
 // use morgan to log incoming requests
 app.use(morgan('dev'));
@@ -31,6 +32,7 @@ app.use((req, res, next) => {
 //handling incoming requests(routes)
 app.use('/users', userRouter);
 app.use('/books', bookRouter);
+// app.use('/auth', authRouter);
 
 // Handling errors
 app.use((req, res, next) => {
@@ -48,8 +50,6 @@ app.use((error, req, res, next) => {
     });
 });
 
-// Handling incoming requests
-// app.use('/books', bookRouter);
 /*
 app.get('/', (req, res, next) => {
     res.send('<h1>Book My Book Home Page</h1>')
