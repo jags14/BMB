@@ -9,7 +9,7 @@ const { default: mongoose } = require('mongoose');
 
 // connecting to mongodb database
 // mongodb+srv://jags:<PASSWORD>@cluster0.07d8ppo.mongodb.net
-mongoose.connect('mongodb+srv://jags:alwaysdaring_14@cluster0.07d8ppo.mongodb.net/?retryWrites=true&w=majority', {
+mongoose.connect('mongodb+srv://jags:' + process.env.DB_PASS + '@cluster0.07d8ppo.mongodb.net/?retryWrites=true&w=majority', {
     useNewUrlParser: true,
     useUnifiedTopology: true
 });
