@@ -8,7 +8,8 @@ const bookRouter = require('./node-apis/books/routes/books');
 const { default: mongoose } = require('mongoose');
 
 // connecting to mongodb database
-mongoose.connect('mongodb+srv://jags:' + process.env.MONGO_ATLAS_PW + '@cluster0.07d8ppo.mongodb.net/?retryWrites=true&w=majority', {
+// mongodb+srv://jags:<PASSWORD>@cluster0.07d8ppo.mongodb.net
+mongoose.connect('mongodb+srv://jags:alwaysdaring_14@cluster0.07d8ppo.mongodb.net/?retryWrites=true&w=majority', {
     useNewUrlParser: true,
     useUnifiedTopology: true
 });
@@ -27,6 +28,10 @@ app.use((req, res, next) => {
         return res.status(200).json({});
     }
     next();
+});
+
+app.get('/', (req, res, next) => {
+    res.send('<h1>Book My Book Home Page</h1>')
 });
 
 //handling incoming requests(routes)
@@ -56,10 +61,7 @@ app.get('/', (req, res, next) => {
 });
 */
 
-/*
+
 app.listen(3000, () => {
     console.log("we are up & running at port 3000");
 });
-*/
-
-module.exports = app;

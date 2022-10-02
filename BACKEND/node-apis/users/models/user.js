@@ -4,13 +4,13 @@ const userSchema = mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
     name: {
         type: String,
-        required: [true, "can't be blank"],
-        index: true
+        required: [true, "can't be blank"]
     },
+    /*
     gender: {
         type: String,
         Enumerator: ['Male', 'Female', 'Other']
-    },
+    }, */
     email: {
         type: String,
         required: [true, "can't be blank"],
