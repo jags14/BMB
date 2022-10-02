@@ -8,12 +8,19 @@ router.get('/', (req, res, next) => {
     User.find()
         .exec()
         .then((users) => {
-            connsole.log("getting all users");
-            console.log(users);
-            return res.status(200).json({
-                count: users.length,
-                userList: users
-            });
+            if(!users.length){
+                console.log("No users found");
+                return res.status(404).json({
+                    message: 'User not found'
+                });
+            } else {
+                console.log("getting all users");
+                console.log(users);
+                return res.status(200).json({
+                    count: users.length,
+                    userList: users
+                });
+            }
         })
         .catch((err) => {
             if(err){
@@ -33,42 +40,75 @@ router.post('/signup', (req, res, next) => {
                     message: 'User already exists'
                 })
             } else {
-                const user = new User(body);
-                const salt = bcrypt.genSalt(10);
-                user.password = bcrypt.hash(user.password, salt);
-                user.save()
-                    .then((data) => {
-                        console.log(data);
-                        return res.status(201).json({
-                            message: 'new user created '
-
-                        })
-                    })
-                    .catch((err) => {
-                        return res.status(500).json({
-                            Error: err
-                        })
-                    });
+                bcrypt.hash(req.body.password, 10, (err, hash) => {
+                    if(err){
+                        console.log(err);
+                        return res.status(500).json({error: err});
+                    } else {
+                        const newUser = new User({
+                            _id: mongoose.Types.ObjectId(),
+                            name: req.body.name,
+                            email: req.body.email,
+                            password: hash,
+                            address: req.body.address
+                        });
+                        newUser.save()
+                            .then(result => {
+                                console.log(`user saved: ${result}`);
+                                res.status(201).json({
+                                    message: 'User created',
+                                    user_created: result
+                                });
+                            })
+                            .catch(err => {
+                                res.status(500).json({
+                                    error: err
+                                });
+                            })
+                    }
+                })
             }
         })
 });
 
 router.post('/login', (req, res, next) => {
-    const user = User.findOne({email: req.body.email});
-    const body = req.body;
-    if(user){
-        const validate = bcrypt.compare(body.password, user.password);
-        if(validate){
-            res.status(200).json({message: 'valid password'})
-        } else {
-            res.status(400).json({message: 'Invalid password'})
-        }
-
-    } else {
-        res.status(404).json({
-            message: "User not found"
-        });
-    }
+    User.find({email: req.body.email})
+        .exec()
+        .then((user) => {
+            if(!user.length){
+                console.log('User not found');
+                res.status(404).json({
+                    message: "User doesn't exist"
+                })
+            } else {
+                bcrypt.compare(req.body.password, user[0].password, (err, result) => {
+                    if(err){
+                        console.log(err);
+                        res.status(401).json({
+                            message: 'Auth failed'
+                        })
+                    }
+                    if(result){
+                        const token = jwt.sign({
+                            email: user[0].email,
+                            userId: user[0]._id
+                        },
+                        process.env.JWT_KEY,
+                        {
+                            expiresIn: "1h"
+                        }
+                        );
+                    res.status(200).json({
+                        message: "User found",
+                        user_token: token
+                    })
+                    }
+                })
+            }
+        })
+        .catch(err => {
+            res.status()
+        })
 });
 
 module.exports = router;

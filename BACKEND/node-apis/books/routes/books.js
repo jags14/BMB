@@ -7,11 +7,18 @@ router.get('/', (req, res, next) => {
     Book.find()
         .exec()
         .then((books) => {
-            console.log(books);
-            res.status(200).json({
-                message: "Fetching the books",
-                booksList : books
-            });
+            if(books.length < 1){
+                console.log('No books found');
+                return res.status(404).json({
+                    message: 'Books not found'
+                })
+            } else {
+                console.log(books);
+                res.status(200).json({
+                    message: "Fetching the books",
+                    booksList : books
+                });
+            }
         })
         .catch(err => {
             console.log(err);
